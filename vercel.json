@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["hkg1"],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": {
+      "description": "Supabase项目URL"
+    },
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": {
+      "description": "Supabase匿名密钥"
+    },
+    "SUPABASE_SERVICE_ROLE_KEY": {
+      "description": "Supabase服务角色密钥"
+    },
+    "STRIPE_SECRET_KEY": {
+      "description": "Stripe密钥"
+    },
+    "STRIPE_WEBHOOK_SECRET": {
+      "description": "Stripe Webhook密钥"
+    },
+    "STRIPE_PRICE_BASIC": {
+      "description": "基础订阅计划价格ID"
+    },
+    "STRIPE_PRICE_STANDARD": {
+      "description": "标准订阅计划价格ID"
+    },
+    "STRIPE_PRICE_PREMIUM": {
+      "description": "高级订阅计划价格ID"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/dashboard",
+      "permanent": false
+    }
+  ],
+  "github": {
+    "enabled": true,
+    "silent": false
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -49,7 +49,7 @@ export default function ExecutionHistory({
     offset: 0,
   });
 
-  const fetchExecutions = async () => {
+  const fetchExecutions = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -74,11 +74,11 @@ export default function ExecutionHistory({
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.limit, pagination.offset, algorithmId]);
 
   useEffect(() => {
     fetchExecutions();
-  }, [pagination.offset, algorithmId]);
+  }, [fetchExecutions]);
 
   const handlePrevPage = () => {
     if (pagination.offset > 0) {

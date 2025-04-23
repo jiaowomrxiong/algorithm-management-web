@@ -5,7 +5,7 @@ import { UserNav } from "./user-nav";
 import { useAuth } from "@/hooks/use-auth";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user, loading, isAdmin } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) {
     return (

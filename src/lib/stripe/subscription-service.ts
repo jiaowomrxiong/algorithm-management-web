@@ -3,9 +3,8 @@ import { Algorithm } from "@/types/algorithm";
 import { Database } from "@/types/database";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-11-15" as any,
-});
+// 初始化Stripe实例，不指定apiVersion
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export interface SubscriptionPlan {
   id: string;
@@ -212,5 +211,87 @@ export async function handleSubscriptionEvent({
   } catch (error) {
     console.error("处理订阅事件失败:", error);
     throw error;
+  }
+}
+
+// 订阅服务类
+export class SubscriptionService {
+  private supabase: SupabaseClient<Database>;
+
+  constructor(supabase: SupabaseClient<Database>) {
+    this.supabase = supabase;
+  }
+
+  // 处理订阅创建
+  async handleSubscriptionCreated(customerId: string, subscriptionId: string) {
+    try {
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+      // 获取 metadata
+      const checkoutSessions = await stripe.checkout.sessions.list({
+        subscription: subscriptionId,
+        limit: 1,
+      });
+
+      if (checkoutSessions.data.length === 0) {
+        throw new Error("找不到相关的结账会话");
+      }
+
+      const session = checkoutSessions.data[0];
+      const metadata = session.metadata as {
+        userId: string;
+        algorithmId: string;
+        algorithmName: string;
+        credits: string;
+      } | null;
+
+      if (!metadata) {
+        throw new Error("结账会话没有元数据");
+      }
+
+      // 获取一个月后的过期时间
+      const expiresAt = new Date();
+      expiresAt.setMonth(expiresAt.getMonth() + 1);
+
+      // 更新数据库中的订阅信息
+      await this.supabase.from("subscriptions").insert({
+        user_id: metadata.userId,
+        algorithm_id: metadata.algorithmId,
+        algorithm_name: metadata.algorithmName,
+        credits_remaining: parseInt(metadata.credits || "0"),
+        status: subscription.status,
+        stripe_subscription_id: subscriptionId,
+        stripe_customer_id: customerId,
+        expires_at: expiresAt.toISOString(),
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error("处理订阅创建失败:", error);
+      throw error;
+    }
+  }
+
+  // 更新订阅状态
+  async updateSubscriptionStatus(
+    customerId: string,
+    subscriptionId: string,
+    status: string
+  ) {
+    try {
+      await this.supabase
+        .from("subscriptions")
+        .update({
+          status: status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("stripe_subscription_id", subscriptionId)
+        .eq("stripe_customer_id", customerId);
+
+      return { success: true };
+    } catch (error) {
+      console.error("更新订阅状态失败:", error);
+      throw error;
+    }
   }
 }

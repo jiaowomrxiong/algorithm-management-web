@@ -10,10 +10,10 @@ import { SubscriptionCard } from "./subscription-card";
 import { toast } from "sonner";
 
 export interface SubscriptionFormProps {
-  userId: string;
+  userId?: string;
 }
 
-export function SubscriptionForm({ userId }: SubscriptionFormProps) {
+export function SubscriptionForm({}: SubscriptionFormProps) {
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();

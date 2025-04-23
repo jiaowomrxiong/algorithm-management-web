@@ -16,7 +16,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 async function testTables() {
   try {
     // 测试用户表
-    const { data: users, error: usersError } = await supabase
+    const { error: usersError } = await supabase
       .from("users")
       .select("*")
       .limit(1);
@@ -28,7 +28,7 @@ async function testTables() {
     }
 
     // 测试算法表
-    const { data: algorithms, error: algorithmsError } = await supabase
+    const { error: algorithmsError } = await supabase
       .from("algorithms")
       .select("*")
       .limit(1);
@@ -43,7 +43,7 @@ async function testTables() {
     }
 
     // 测试订阅表
-    const { data: subscriptions, error: subscriptionsError } = await supabase
+    const { error: subscriptionsError } = await supabase
       .from("subscriptions")
       .select("*")
       .limit(1);
@@ -58,7 +58,7 @@ async function testTables() {
     }
 
     // 测试调用记录表
-    const { data: calls, error: callsError } = await supabase
+    const { error: callsError } = await supabase
       .from("algorithm_calls")
       .select("*")
       .limit(1);

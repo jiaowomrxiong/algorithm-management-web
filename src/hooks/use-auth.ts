@@ -1,7 +1,6 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Database } from "@/types/database";
 
@@ -10,7 +9,7 @@ type User = Database["public"]["Tables"]["users"]["Row"];
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [isAdminState, setIsAdmin] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -32,6 +31,7 @@ export function useAuth() {
           .single();
 
         setUser(userData);
+        setIsAdmin(userData?.role === "admin" || false);
       } catch (error) {
         console.error("Error fetching user:", error);
         setUser(null);
@@ -52,8 +52,10 @@ export function useAuth() {
           .eq("id", session.user.id)
           .single();
         setUser(userData);
+        setIsAdmin(userData?.role === "admin" || false);
       } else {
         setUser(null);
+        setIsAdmin(false);
       }
       setLoading(false);
     });
@@ -61,13 +63,11 @@ export function useAuth() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
-
-  const isAdmin = user?.role === "admin";
+  }, [supabase]);
 
   return {
     user,
     loading,
-    isAdmin,
+    isAdmin: isAdminState,
   };
 }

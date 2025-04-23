@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       query = query.eq("algorithm_id", algorithm_id);
     }
 
-    const { data, error, count } = await query;
+    const { data, error } = await query;
 
     if (error) {
       console.error("获取执行历史错误:", error);
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 获取总记录数
-    const { count: totalCount, error: countError } = await supabase
+    const { count: totalCount } = await supabase
       .from("algorithm_executions")
       .select("*", { count: "exact", head: true })
       .eq("user_id", session.user.id)

@@ -1,35 +1,36 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { Database } from "@/types/database";
+import { CookieOptions } from "next/headers";
 
 export async function createClient() {
   const cookieStore = cookies();
 
-  return createServerClient<Database>(
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
+        get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(name, value, options) {
+        set(name: string, value: string, options: CookieOptions) {
           try {
-            cookieStore.set(name, value, options);
-          } catch (error) {
-            // 如果从服务器组件调用，可能会失败
-            // 中间件会处理会话刷新
+            cookieStore.set({ name, value, ...options });
+          } catch {
+            // 处理错误
           }
         },
-        remove(name, options) {
+        remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.delete(name, options);
-          } catch (error) {
-            // 如果从服务器组件调用，可能会失败
-            // 中间件会处理会话刷新
+            cookieStore.set({ name, value: "", ...options });
+          } catch {
+            // 处理错误
           }
         },
       },
     }
   );
+
+  return supabase;
 }

@@ -1,19 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["hkg1"],
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "",
-    "SUPABASE_SERVICE_ROLE_KEY": "",
-    "STRIPE_SECRET_KEY": "",
-    "STRIPE_WEBHOOK_SECRET": "",
-    "STRIPE_PRICE_BASIC": "",
-    "STRIPE_PRICE_STANDARD": "",
-    "STRIPE_PRICE_PREMIUM": ""
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -39,9 +27,5 @@
       "destination": "/dashboard",
       "permanent": false
     }
-  ],
-  "github": {
-    "enabled": true,
-    "silent": false
-  }
+  ]
 }

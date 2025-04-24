@@ -95,6 +95,9 @@ export interface Database {
           id: string;
           user_id: string;
           algorithm_id: string;
+          input: Json;
+          output: Json;
+          execution_time: number;
           status: string;
           created_at: string;
           updated_at: string;
@@ -103,6 +106,9 @@ export interface Database {
           id?: string;
           user_id: string;
           algorithm_id: string;
+          input?: Json;
+          output?: Json;
+          execution_time?: number;
           status?: string;
           created_at?: string;
           updated_at?: string;
@@ -111,6 +117,9 @@ export interface Database {
           id?: string;
           user_id?: string;
           algorithm_id?: string;
+          input?: Json;
+          output?: Json;
+          execution_time?: number;
           status?: string;
           created_at?: string;
           updated_at?: string;

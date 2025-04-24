@@ -12,15 +12,10 @@ export default async function NewSubscriptionPage() {
     redirect("/auth/login");
   }
 
-  const { data: algorithms } = await supabase
-    .from("algorithms")
-    .select("id, name, description")
-    .order("name");
-
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">新建订阅</h1>
-      <SubscriptionForm algorithms={algorithms || []} />
+      <SubscriptionForm />
     </div>
   );
 }

@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 // 获取单个算法
 export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { id } = context.params;
+    const { id } = await params;
 
     // 检查用户是否已认证
     const {
@@ -40,11 +40,11 @@ export async function GET(
 // 更新算法
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { id } = context.params;
+    const { id } = await params;
 
     // 检查用户是否已认证
     const {
@@ -102,12 +102,12 @@ export async function PATCH(
 
 // 删除算法
 export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { id } = context.params;
+    const { id } = await params;
 
     // 检查用户是否已认证
     const {

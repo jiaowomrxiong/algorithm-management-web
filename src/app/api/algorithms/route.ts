@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET() {
   try {
@@ -31,7 +31,7 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -45,7 +45,7 @@ export async function POST() {
     }
 
     // 从请求体获取算法数据
-    const requestData = await new Response().json();
+    const requestData = await request.json();
     const { name, description, code, price, api_endpoint } = requestData;
 
     if (!name || !description || !code || !price) {

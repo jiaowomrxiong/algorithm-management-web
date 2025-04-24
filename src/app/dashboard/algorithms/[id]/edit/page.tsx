@@ -5,15 +5,15 @@ import { AlgorithmForm } from "@/components/algorithms/algorithm-form";
 export default async function EditAlgorithmPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
-  if (!session?.user?.id) {
+  if (!session) {
     redirect("/auth/login");
   }
 
@@ -31,7 +31,7 @@ export default async function EditAlgorithmPage({
   const { data: algorithm } = await supabase
     .from("algorithms")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!algorithm) {
@@ -40,10 +40,7 @@ export default async function EditAlgorithmPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">编辑算法</h1>
-        <p className="text-muted-foreground">修改算法信息</p>
-      </div>
+      <h1 className="text-3xl font-bold">编辑算法</h1>
       <AlgorithmForm initialData={algorithm} />
     </div>
   );

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { User } from "@supabase/supabase-js";
 
 async function listUsers() {
   const supabase = await createClient();
@@ -13,7 +14,7 @@ async function listUsers() {
   }
 
   console.log("Users in the database:");
-  users.forEach((user) => {
+  (users as User[]).forEach((user) => {
     console.log(`- ${user.email} (${user.id})`);
   });
 }

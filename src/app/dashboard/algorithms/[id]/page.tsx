@@ -8,8 +8,9 @@ import { DeleteAlgorithmButton } from "@/components/algorithms/delete-algorithm-
 export default async function AlgorithmPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const {
@@ -22,7 +23,7 @@ export default async function AlgorithmPage({
   const { data: algorithm } = await supabase
     .from("algorithms")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!algorithm) {
